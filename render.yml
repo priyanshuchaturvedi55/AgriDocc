@@ -10,3 +10,4 @@ services:
         value: /opt/render/project/src/AgriDoc/main_app
       - key: PYTHONUNBUFFERED
         value: 1
+
