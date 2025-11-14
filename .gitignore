@@ -1,0 +1,7 @@
+
+# Uploaded images (test files)
+AgriDoc/main_app/static/uploads/*.png
+AgriDoc/main_app/static/uploads/*.jpg
+AgriDoc/main_app/static/uploads/*.jpeg
+!AgriDoc/main_app/static/uploads/Readme.md
+
