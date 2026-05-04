@@ -121,9 +121,7 @@ disease_info, supplement_info = load_data_safely()
 # ================= GEMINI CONFIG =================
 
 if GEMINI_AVAILABLE:
-
-    GEMINI_API_KEY = "AIzaSyBPFwWdv4tL_O9rcb80_Hw0TgbcaGVUdQQ"  # Regenerate later
-
+    GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
     try:
         client = genai.Client(api_key=GEMINI_API_KEY)
 
