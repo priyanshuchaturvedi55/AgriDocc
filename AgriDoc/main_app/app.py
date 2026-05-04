@@ -1,11 +1,11 @@
 import os
 import sys
-import torch
+# import torch  # DISABLED to save memory on Render Free Tier
 import pandas as pd
 import numpy as np
 from flask import Flask, redirect, render_template, request
 from PIL import Image
-import torchvision.transforms.functional as TF
+# import torchvision.transforms.functional as TF  # DISABLED
 import json
 
 # Import Google Gemini AI
@@ -18,27 +18,11 @@ except ImportError:
     GEMINI_AVAILABLE = False
 
 # Try importing CNN module properly
-try:
-    import CNN
-except ModuleNotFoundError:
-    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-    try:
-        import CNN
-    except ModuleNotFoundError:
-        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        try:
-            from AgriDoc import CNN
-        except ModuleNotFoundError:
-            print("ERROR: Could not import CNN module. Please check file structure.")
-            class CNN:
-                def __init__(self, num_classes):
-                    self.num_classes = num_classes
-                def __call__(self, x):
-                    return np.zeros((1, self.num_classes))
-                def eval(self):
-                    pass
-                def load_state_dict(self, state_dict):
-                    pass
+# DISABLED to save memory on Render Free Tier
+class DummyCNN:
+    def __call__(self, x):
+        return np.zeros((1, 39))
+CNN = DummyCNN()
 
 # Define directory for storing model file
 MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
@@ -96,43 +80,9 @@ def download_model_directly():
 
 # Try to load the model
 def load_model_safely():
-    # Check if model file exists at the expected location
-    if not os.path.exists(model_path):
-        print(f"Model file not found at {model_path}")
-        
-        # Try direct download method first (more reliable on Render)
-        if download_model_directly():
-            print("Direct download successful")
-        else:
-            # Fall back to gdown if direct download fails
-            try:
-                import gdown
-                file_id = '1En73N317hTlvJpZDa-FqsMsIMskzU70h'
-                url = f'https://drive.google.com/uc?id={file_id}'
-                print(f"Attempting to download with gdown from {url}")
-                gdown.download(url, model_path, quiet=False)
-            except Exception as e:
-                print(f"gdown download failed: {str(e)}")
-                print("WARNING: Could not download model. App will run with limited functionality.")
-                return CNN.CNN(39)  # Return dummy model
-    
-    try:
-        # Load model using absolute path
-        print(f"Loading model from {model_path}")
-        # model = CNN.CNN(39)
-        # model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-        # model.eval()
-        model = CNN.CNN(39)
-        state_dict = torch.load(model_path, map_location=torch.device('cpu'))
-        model.load_state_dict(state_dict)
-        model.eval()
-        print("Model loaded successfully")
-        return model
-    except Exception as e:
-        print(f"Error loading model: {str(e)}")
-        print("WARNING: Running with limited functionality")
-        # Return a dummy model that will return zeros
-        return CNN.CNN(39)
+    print("WARNING: PyTorch CNN model loading is DISABLED to prevent Out of Memory crashes on Render Free Tier.")
+    print("The app will rely entirely on Google Gemini AI, which is more accurate anyway!")
+    return None
 
 # Load disease and supplement info with error handling
 def load_data_safely():
@@ -346,22 +296,8 @@ Return ONLY the JSON object, no markdown formatting, no explanations before or a
 
 # Prediction function with error handling
 def prediction(image_path):
-    try:
-        image = Image.open(image_path)
-        image = image.resize((224, 224))
-        input_data = TF.to_tensor(image)
-        input_data = input_data.view((-1, 3, 224, 224))
-        output = model(input_data)
-        
-        # Handle both tensor and numpy outputs
-        if isinstance(output, torch.Tensor):
-            output = output.detach().numpy()
-        
-        index = np.argmax(output)
-        return index
-    except Exception as e:
-        print(f"Prediction error: {str(e)}")
-        return 0  # Return default index in case of error
+    print("CNN Prediction disabled. Relaying entirely on Gemini AI.")
+    return 0
 
 # Flask app
 app = Flask(__name__)

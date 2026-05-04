@@ -5,3 +5,7 @@ AgriDoc/main_app/static/uploads/*.jpg
 AgriDoc/main_app/static/uploads/*.jpeg
 !AgriDoc/main_app/static/uploads/Readme.md
 
+# Ignore massive AI models
+*.pt
+*.part
+*.pth
