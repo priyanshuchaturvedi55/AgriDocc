@@ -1,5 +1,5 @@
-{% extends 'base.html' %} 
-{% block pagetitle %}Contact Us - AgriDoc{% endblock pagetitle %} 
+{% extends 'base.html' %}
+{% block pagetitle %}Contact Us - AgriDoc{% endblock pagetitle %}
 
 {% block body %}
 <style>
@@ -18,11 +18,9 @@
   }
 
   .hero-section {
-    background: linear-gradient(
-      135deg,
-      var(--primary-color),
-      var(--secondary-color)
-    );
+    background: linear-gradient(135deg,
+        var(--primary-color),
+        var(--secondary-color));
     color: white;
     padding: 3rem 0;
     margin-bottom: 2rem;
@@ -77,6 +75,9 @@
     color: var(--text-color);
     font-weight: 600;
     margin-bottom: 0.5rem;
+    background-color: transparent;
+    padding: 0;
+    margin-top: 0;
   }
 
   .form-control {
@@ -179,11 +180,9 @@
   }
 
   .info-section {
-    background: linear-gradient(
-      135deg,
-      rgba(44, 110, 73, 0.1),
-      rgba(76, 149, 108, 0.1)
-    );
+    background: linear-gradient(135deg,
+        rgba(44, 110, 73, 0.1),
+        rgba(76, 149, 108, 0.1));
     border-left: 4px solid var(--secondary-color);
     padding: 1.5rem;
     border-radius: 0 8px 8px 0;
@@ -259,56 +258,31 @@
             <label for="name" class="form-label">
               <i class="fas fa-user"></i> Your Name
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              name="name"
-              placeholder="Enter your name"
-              required
-            />
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required />
           </div>
 
           <div class="form-group">
             <label for="email" class="form-label">
               <i class="fas fa-envelope"></i> Email Address
             </label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              name="email"
-              placeholder="your.email@example.com"
-              required
-            />
+            <input type="email" class="form-control" id="email" name="email" placeholder="your.email@example.com"
+              required />
           </div>
 
           <div class="form-group">
             <label for="subject" class="form-label">
               <i class="fas fa-tag"></i> Subject
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="subject"
-              name="subject"
-              placeholder="What is this regarding?"
-              required
-            />
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="What is this regarding?"
+              required />
           </div>
 
           <div class="form-group">
             <label for="message" class="form-label">
               <i class="fas fa-comment"></i> Message
             </label>
-            <textarea
-              class="form-control"
-              id="message"
-              name="message"
-              rows="6"
-              placeholder="Tell us what's on your mind..."
-              required
-            ></textarea>
+            <textarea class="form-control" id="message" name="message" rows="6"
+              placeholder="Tell us what's on your mind..." required></textarea>
           </div>
 
           <button type="submit" class="btn btn-submit">
@@ -321,8 +295,8 @@
       <div class="info-section">
         <h5><i class="fas fa-info-circle"></i> What can we help you with?</h5>
         <p>
-          Whether you have questions about using AgriDoc, need technical support, 
-          want to report a bug, or have suggestions for improvement, we're here to help. 
+          Whether you have questions about using AgriDoc, need technical support,
+          want to report a bug, or have suggestions for improvement, we're here to help.
           We typically respond within 24-48 hours.
         </p>
       </div>
@@ -420,24 +394,24 @@
   </div>
 </div>
 
-  <script>
+<script>
   // Form submission handling - client-side validation
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
+  document.getElementById('contactForm').addEventListener('submit', function (e) {
     // Get form data
     const formData = new FormData(this);
-    
+
     // Simple client-side validation
     const name = formData.get('name');
     const email = formData.get('email');
     const subject = formData.get('subject');
     const message = formData.get('message');
-    
+
     if (!name || !email || !subject || !message) {
       e.preventDefault();
       alert('Please fill in all fields');
       return false;
     }
-    
+
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -445,10 +419,9 @@
       alert('Please enter a valid email address');
       return false;
     }
-    
+
     // If validation passes, allow form to submit normally
     return true;
   });
 </script>
 {% endblock body %}
-

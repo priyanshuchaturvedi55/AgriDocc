@@ -9,11 +9,12 @@ import torchvision.transforms.functional as TF
 import json
 
 # Import Google Gemini AI
+# Import Google Gemini (New SDK)
 try:
-    import google.generativeai as genai
+    from google import genai
     GEMINI_AVAILABLE = True
 except ImportError:
-    print("WARNING: google-generativeai not installed. Install it with: pip install google-generativeai")
+    print("WARNING: google-genai not installed. Run: pip install google-genai")
     GEMINI_AVAILABLE = False
 
 # Try importing CNN module properly
@@ -118,8 +119,12 @@ def load_model_safely():
     try:
         # Load model using absolute path
         print(f"Loading model from {model_path}")
+        # model = CNN.CNN(39)
+        # model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        # model.eval()
         model = CNN.CNN(39)
-        model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+        state_dict = torch.load(model_path, map_location=torch.device('cpu'), weights_only=False)
+        model.load_state_dict(state_dict)
         model.eval()
         print("Model loaded successfully")
         return model
@@ -153,26 +158,59 @@ model = load_model_safely()
 disease_info, supplement_info = load_data_safely()
 
 # Initialize Gemini AI
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyB6EoL0MhlnTJkI1tKm-J-Nu2Ce7KO0VAU')
+# GEMINI_API_KEY = os.environ.get('AIzaSyD6h9kqy5Dvm9oca_o-VPHiQu7gGA0bVV8', 'AIzaSyD6h9kqy5Dvm9oca_o-VPHiQu7gGA0bVV8')
+# model = genai.GenerativeModel("gemini-pro")
+# response = model.generate_content("Hello, are you working?")
+# print(response.text)
+# ================= GEMINI CONFIG =================
+
+# ================= GEMINI CONFIG =================
+
+# ================= GEMINI CONFIG =================
+
+# ================= GEMINI CONFIG =================
 
 if GEMINI_AVAILABLE:
+
+    GEMINI_API_KEY = "AIzaSyBPFwWdv4tL_O9rcb80_Hw0TgbcaGVUdQQ"  # Regenerate later
+
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        # Use gemini-2.5-flash which is the latest stable vision model
-        gemini_model = genai.GenerativeModel('gemini-2.5-flash')
-        print("Gemini AI initialized successfully with model: gemini-2.5-flash")
+        client = genai.Client(api_key=GEMINI_API_KEY)
+
+        # Use best vision model for your project
+        GEMINI_MODEL = "gemini-2.5-flash"
+
+        print("✅ Gemini Initialized with", GEMINI_MODEL)
+
     except Exception as e:
-        print(f"Error initializing Gemini AI: {str(e)}")
-        try:
-            # Fallback to gemini-2.0-flash if 2.5 is not available
-            gemini_model = genai.GenerativeModel('gemini-2.0-flash')
-            print("Gemini AI initialized with fallback model: gemini-2.0-flash")
-        except Exception as e2:
-            print(f"Error initializing Gemini AI with fallback: {str(e2)}")
-            GEMINI_AVAILABLE = False
-            gemini_model = None
+        print("❌ Gemini Error:", e)
+        GEMINI_AVAILABLE = False
+        client = None
+
+# ================================================
+
+# ================================================
+# ================================================
+
+# ================================================
+# if GEMINI_AVAILABLE:
+#     try:
+#         genai.configure(api_key=GEMINI_API_KEY)
+#         # Use gemini-2.5-flash which is the latest stable vision model
+#         gemini_model = genai.GenerativeModel('gemini-2.5-flash')
+#         print("Gemini AI initialized successfully with model: gemini-2.5-flash")
+#     except Exception as e:
+#         print(f"Error initializing Gemini AI: {str(e)}")
+#         try:
+#             # Fallback to gemini-2.0-flash if 2.5 is not available
+#             gemini_model = genai.GenerativeModel('gemini-2.0-flash')
+#             print("Gemini AI initialized with fallback model: gemini-2.0-flash")
+#         except Exception as e2:
+#             print(f"Error initializing Gemini AI with fallback: {str(e2)}")
+#             GEMINI_AVAILABLE = False
+#             gemini_model = None
 else:
-    gemini_model = None
+    client = None
 
 # Gemini AI analysis function for plant disease detection
 def analyze_with_gemini(image_path):
@@ -180,14 +218,15 @@ def analyze_with_gemini(image_path):
     Analyze plant disease image using Google Gemini AI.
     Returns a dictionary with disease name, description, treatment, and confidence.
     """
-    if not GEMINI_AVAILABLE or gemini_model is None:
-        print("Gemini AI not available - GEMINI_AVAILABLE:", GEMINI_AVAILABLE, "gemini_model:", gemini_model)
+
+    if not GEMINI_AVAILABLE or client is None:
+        print("Gemini AI not available - GEMINI_AVAILABLE:", GEMINI_AVAILABLE)
         return None
-    
+
     try:
         print(f"Starting Gemini AI analysis for image: {image_path}")
-        
-        # Prepare the prompt for Gemini AI
+
+        # ================= YOUR ORIGINAL PROMPT (UNCHANGED) =================
         prompt = """You are an expert plant pathologist. Analyze this plant leaf image carefully and provide a detailed diagnosis.
 
 IMPORTANT: Analyze the ACTUAL image provided, not generic information. Look at the specific visual symptoms, colors, patterns, and characteristics visible in THIS particular image.
@@ -210,46 +249,55 @@ Analyze the image carefully:
 5. What treatment is recommended?
 
 Return ONLY the JSON object, no markdown formatting, no explanations before or after."""
+        # =====================================================================
 
-        # Open and prepare the image for Gemini
+        # ✅ Open image using PIL (Required for new Gemini SDK)
         img = Image.open(image_path)
-        
-        # Convert to RGB if necessary (Gemini requires RGB format)
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-        
+
+        # Convert to RGB if needed
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+
         print("Calling Gemini API...")
-        # Analyze the image with Gemini
-        response = gemini_model.generate_content([prompt, img])
-        
+
+        # ✅ Call Gemini with PIL image
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=[
+                prompt,
+                img
+            ]
+        )
+
         # Parse the response
         response_text = response.text.strip()
         print(f"Gemini response received: {response_text[:200]}...")
-        
+
         # Try to extract JSON from the response
         try:
-            # Remove markdown code blocks if present
             cleaned_text = response_text
+
+            # Remove markdown blocks if present
             if "```json" in cleaned_text:
                 cleaned_text = cleaned_text.split("```json")[1].split("```")[0].strip()
             elif "```" in cleaned_text:
-                # Remove any markdown code blocks
                 parts = cleaned_text.split("```")
                 if len(parts) > 1:
                     cleaned_text = parts[1].strip()
                     if cleaned_text.startswith("json"):
                         cleaned_text = cleaned_text[4:].strip()
-            
-            # Try to find JSON object in the text
+
+            # Extract JSON object
             start_idx = cleaned_text.find('{')
             end_idx = cleaned_text.rfind('}') + 1
+
             if start_idx >= 0 and end_idx > start_idx:
                 cleaned_text = cleaned_text[start_idx:end_idx]
-            
+
             # Parse JSON
             gemini_result = json.loads(cleaned_text)
-            
-            # Ensure all required fields exist
+
+            # Build result
             result = {
                 "disease_name": gemini_result.get("disease_name", "Unknown Disease"),
                 "plant_type": gemini_result.get("plant_type", "Unknown Plant"),
@@ -259,15 +307,18 @@ Return ONLY the JSON object, no markdown formatting, no explanations before or a
                 "confidence": gemini_result.get("confidence", "Medium"),
                 "full_analysis": response_text
             }
-            
+
             print(f"Gemini AI analysis successful: {result['disease_name']} on {result['plant_type']}")
+
             return result
+
         except json.JSONDecodeError as e:
             print(f"JSON parsing error: {str(e)}")
             print(f"Response text: {response_text}")
-            # If JSON parsing fails, try to extract information from text
-            # Look for key phrases in the response
+
+            # Fallback text analysis
             disease_name = "AI Analysis Available"
+
             if "healthy" in response_text.lower():
                 disease_name = "Healthy Plant"
             elif "scab" in response_text.lower():
@@ -276,7 +327,7 @@ Return ONLY the JSON object, no markdown formatting, no explanations before or a
                 disease_name = "Rot"
             elif "blight" in response_text.lower():
                 disease_name = "Blight"
-            
+
             return {
                 "disease_name": disease_name,
                 "plant_type": "Unknown",
@@ -286,7 +337,7 @@ Return ONLY the JSON object, no markdown formatting, no explanations before or a
                 "confidence": "Medium",
                 "full_analysis": response_text
             }
-    
+
     except Exception as e:
         import traceback
         print(f"Error in Gemini AI analysis: {str(e)}")

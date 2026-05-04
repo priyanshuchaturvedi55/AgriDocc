@@ -20,7 +20,7 @@
         <div class="title-underline"></div>
       </div>
     </div>
-    
+
     <!-- Gemini AI Analysis Info (if available) -->
     {% if use_gemini and plant_type %}
     <div class="row mb-3">
@@ -33,14 +33,14 @@
           {% if severity and severity != "Unknown" %}
           <div class="gemini-info-item">
             <i class="fas fa-exclamation-triangle text-warning me-2"></i>
-            <strong>Severity:</strong> 
+            <strong>Severity:</strong>
             <span class="severity-badge severity-{{severity.lower()}}">{{severity}}</span>
           </div>
           {% endif %}
           {% if confidence and confidence != "Unknown" %}
           <div class="gemini-info-item">
             <i class="fas fa-chart-line text-info me-2"></i>
-            <strong>Confidence:</strong> 
+            <strong>Confidence:</strong>
             <span class="confidence-badge confidence-{{confidence.lower()}}">{{confidence}}</span>
           </div>
           {% endif %}
@@ -54,17 +54,9 @@
       <div class="col-md-6 col-lg-5 col-xl-4">
         <div class="plant-image-container">
           {% if use_gemini and uploaded_image %}
-          <img
-            src="/static/uploads/{{uploaded_image}}"
-            alt="{{title}}"
-            class="img-fluid plant-image"
-          />
+          <img src="/static/uploads/{{uploaded_image}}" alt="{{title}}" class="img-fluid plant-image" />
           {% else %}
-          <img
-            src="{{image_url}}"
-            alt="{{title}}"
-            class="img-fluid plant-image"
-          />
+          <img src="{{image_url}}" alt="{{title}}" class="img-fluid plant-image" />
           {% endif %}
         </div>
       </div>
@@ -78,12 +70,12 @@
           <h3 class="card-title">
             <i class="fas fa-info-circle text-primary me-2"></i>
             {% if use_gemini %}
-              {% if 'healthy' in title.lower() %} Plant Health Analysis {% else %} Disease Analysis {% endif %}
+            {% if 'healthy' in title.lower() %} Plant Health Analysis {% else %} Disease Analysis {% endif %}
             {% else %}
-              {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or
-              pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28
-              or pred==38 %} Tips to Grow Healthy Plants {% else %} Brief
-              Description {% endif %}
+            {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or
+            pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28
+            or pred==38 %} Tips to Grow Healthy Plants {% else %} Brief
+            Description {% endif %}
             {% endif %}
           </h3>
           <div class="card-divider"></div>
@@ -104,15 +96,14 @@
         <div class="info-card">
           <h3 class="card-title">
             <i
-              class="{% if use_gemini %}fas fa-prescription-bottle text-info{% elif pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %} fas fa-thumbs-up text-success {% else %} fas fa-shield-alt text-warning {% endif %} me-2"
-            ></i>
+              class="{% if use_gemini %}fas fa-prescription-bottle text-info{% elif pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %} fas fa-thumbs-up text-success {% else %} fas fa-shield-alt text-warning {% endif %} me-2"></i>
             {% if use_gemini %}
-              Treatment & Prevention
+            Treatment & Prevention
             {% else %}
-              {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or
-              pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28
-              or pred==38 %} Benefits {% else %} Prevent This Plant Disease {%
-              endif %}
+            {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or
+            pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28
+            or pred==38 %} Benefits {% else %} Prevent This Plant Disease {%
+            endif %}
             {% endif %}
           </h3>
           <div class="card-divider"></div>
@@ -126,19 +117,14 @@
         <div class="info-card text-center">
           <h3 class="card-title">
             <i
-              class="{% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %} fas fa-seedling text-success {% else %} fas fa-prescription-bottle-alt text-info {% endif %} me-2"
-            ></i>
+              class="{% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %} fas fa-seedling text-success {% else %} fas fa-prescription-bottle-alt text-info {% endif %} me-2"></i>
             {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or
             pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28
             or pred==38 %} Fertilizer {% else %} Supplements {% endif %}
           </h3>
           <div class="card-divider"></div>
           <div class="product-image-container">
-            <img
-              src="{{simage}}"
-              alt="{{sname}}"
-              class="img-fluid product-image"
-            />
+            <img src="{{simage}}" alt="{{sname}}" class="img-fluid product-image" />
           </div>
           <h5 class="product-name mt-3">{{sname}}</h5>
           <a target="_blank" href="{{buy_link}}" class="btn btn-buy mt-2">
@@ -163,7 +149,7 @@
 <!-- Footer -->
 <footer class="footer">
   <div class="container text-center">
-    <p>© 2025 AgriDoc | Created by Ritesh</p>
+    <p>© 2025 AgriDoc | Created by GreenTeam</p>
   </div>
 </footer>
 
@@ -225,12 +211,10 @@
   .title-underline {
     height: 3px;
     width: 100px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--secondary-color),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        var(--secondary-color),
+        transparent);
     margin: 0 auto 20px;
   }
 
@@ -337,7 +321,8 @@
     font-size: 0.95rem;
   }
 
-  .severity-badge, .confidence-badge {
+  .severity-badge,
+  .confidence-badge {
     padding: 4px 12px;
     border-radius: 15px;
     font-weight: 600;
