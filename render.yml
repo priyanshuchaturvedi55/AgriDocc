@@ -10,4 +10,6 @@ services:
         value: /opt/render/project/src/AgriDoc/main_app
       - key: PYTHONUNBUFFERED
         value: 1
+      - key: PYTHON_VERSION
+        value: 3.9.0
 
