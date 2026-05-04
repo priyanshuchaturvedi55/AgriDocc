@@ -123,7 +123,7 @@ def load_model_safely():
         # model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         # model.eval()
         model = CNN.CNN(39)
-        state_dict = torch.load(model_path, map_location=torch.device('cpu'), weights_only=False)
+        state_dict = torch.load(model_path, map_location=torch.device('cpu'))
         model.load_state_dict(state_dict)
         model.eval()
         print("Model loaded successfully")
